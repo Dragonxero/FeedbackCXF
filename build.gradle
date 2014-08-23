@@ -11,7 +11,7 @@ mainClassName="com.rjoseph.feedback.SomeMainApp"
 */
 
 
-// Change context path (base url), otherwise defaults to name of project 
+// Set context path (base url) for JettyRun* tasks, otherwise they default to name of project (in URL)
 [jettyRunWar, jettyRun]*.contextPath = ''
 
 repositories {
@@ -74,7 +74,7 @@ dependencies {
 
 //Add Jetty war-start-stop phases to the 'test' task
 test.doFirst {
-    jettyRun.contextPath = '/';
+    jettyRun.contextPath = '';
     jettyRun.httpPort = 8080    // Port for test
     jettyRun.daemon = true
     jettyRun.execute()

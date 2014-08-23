@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 import com.rjoseph.feedback.model.UserFeedback;
@@ -28,13 +29,13 @@ public class FeedbackRESTServiceTest {
 	
 	private Logger log = LoggerFactory.getLogger(FeedbackRESTServiceTest.class);
 	
-	/*
-	static {
-		baseURI = "127.0.0.1";
-		port = 8080;
-		basePath = "/";
+	//Constructor - no-args, can serve as test configurator (e.g. like @Before etc)
+	public FeedbackRESTServiceTest() {
+		//These service URL values are shared BUT could be set within each test method
+		//RestAssured.baseURI = "127.0.0.1";
+		RestAssured.port = 8080;
+		//RestAssured.basePath = "/";
 	}
-	*/
 	
     @Test public void test1SubmitFeedback() {   
     	UserFeedback userFeedbackModel = new UserFeedback();
@@ -50,7 +51,7 @@ public class FeedbackRESTServiceTest {
         	contentType(ContentType.JSON).
         	statusCode(201).
         	body("feedbackId", equalTo(1))
-        .when().post("http://127.0.0.1:8080/feedback/save");
+        .when().post("/feedback/post");
     	
     	log.info(response.body().asString());
     }
