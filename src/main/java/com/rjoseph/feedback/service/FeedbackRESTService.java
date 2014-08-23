@@ -50,15 +50,15 @@ public class FeedbackRESTService {
 	@Path("/post")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response save(@Valid UserFeedback feedback) {
+	public Response save(@Valid UserFeedback newFeedback) {
 		Response.Status responseStatus = Response.Status.BAD_REQUEST;
 		
-		//Save feedback
-		int feedbackId = feedbackDAO.save(feedback);
+		//Persist feedback
+		UserFeedback updatedFeedback = feedbackDAO.save(newFeedback);
 		
-		FeedbackResult feedbackResult = new FeedbackResult(feedbackId);
+		FeedbackResult feedbackResult = new FeedbackResult(updatedFeedback.getId());
 		
-		// set HTTP code to "201 Created"
+		// set HTTP status code to "201 Created"
 		responseStatus = Response.Status.CREATED;
 		
 		// Return the ID of the newly created Feedback entry.
@@ -68,17 +68,16 @@ public class FeedbackRESTService {
 	@GET
 	@Path("/get/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getFeedback(@PathParam("id") @Min(-999) int id) {		
-		Response.Status responseStatus;
+	public Response getFeedback(@PathParam("id") @Min(-999) int id) {	
+		//When Not Found - set HTTP status code to "404 Not Found"
+		Response.Status responseStatus = Response.Status.NOT_FOUND;	//Default value
 		
 		UserFeedback userFeedbackRTN = null;
 		
 		//Retrieve the feedback request feedback by id
 		if(feedbackDAO.getFeedback(id) != null && (userFeedbackRTN = feedbackDAO.getFeedback(id)) != null) {
-			// set HTTP code to "200 Accepted"
-			responseStatus = Response.Status.ACCEPTED;
-		} else {
-			responseStatus = Response.Status.BAD_REQUEST;
+			//FEEDBACK FOUND! - set HTTP status code to "200 OK"
+			responseStatus = Response.Status.OK;
 		}
 		
 		// Update client regarding deletion request
@@ -87,25 +86,17 @@ public class FeedbackRESTService {
 
 	@DELETE
 	@Path("/delete/{userName}/{id}")
-	@Produces(MediaType.APPLICATION_JSON)
 	public Response getFeedback(@PathParam("userName") @NotEmpty String userName, @PathParam("id") @Min(-999) int id) {
-		Map<String, Object> deleteNotification = new HashMap<>();
-		deleteNotification.put("id", id);	//Id of attempted Feedback deletion
-		deleteNotification.put("userName", userName);	//User name of attempted Feedback deletion
-		
-		Response.Status responseStatus;
+		//When Not deleted - set HTTP status code to "404 Not Found"
+		Response.Status responseStatus = Response.Status.NOT_FOUND;	//Default value
 		
 		//Try to delete the feedback
 		if(feedbackDAO.getFeedback(id) != null && feedbackDAO.delete(userName, id)) {
-			// set HTTP code to "200 Accepted"
-			responseStatus = Response.Status.ACCEPTED;
-			deleteNotification.put("deleted", true);
-		} else {
-			responseStatus = Response.Status.BAD_REQUEST;
-			deleteNotification.put("deleted", false);
-		}
+			//DELETED! - set HTTP status code to "204 No Content"
+			responseStatus = Response.Status.NO_CONTENT;
+		} 
 		
 		// Update client regarding deletion request
-		return Response.status(responseStatus).entity(deleteNotification).build();
+		return Response.status(responseStatus).build();
 	}
 }

@@ -4,7 +4,7 @@ import com.rjoseph.feedback.model.UserFeedback;
 
 public interface FeedbackDAOIntf {
 
-	public Integer save(UserFeedback feedback);
+	public UserFeedback save(UserFeedback feedback);
 	
 	public boolean delete(String userName, int id);
 

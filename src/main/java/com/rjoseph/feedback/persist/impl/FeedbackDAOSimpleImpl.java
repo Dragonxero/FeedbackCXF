@@ -16,10 +16,12 @@ public class FeedbackDAOSimpleImpl implements FeedbackDAOIntf {
 	private Integer id = 0;
 
 	@Override
-	public Integer save(UserFeedback feedback) {
+	public UserFeedback save(UserFeedback feedback) {
 		feedback.setId(++id);
 		feedbackMap.put(feedback.getId(), feedback);
-		return feedback.getId();
+		
+		//Return the update/persisted UserFeedback instance
+		return feedback;
 	}
 
 	@Override
