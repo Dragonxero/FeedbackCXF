@@ -2,9 +2,9 @@
 <web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
-	<display-name>cxf</display-name>
+	<display-name>Feedback-REST-service</display-name>
 
-	<description>RantAndRave Feedback application (Richard Joseph Aug 2014)</description>
+	<description>RESTful Feedback service application (Richard Joseph Aug 2014)</description>
 
     <!-- context-param>
         <param-name>contextClass</param-name>
@@ -15,14 +15,14 @@
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
-            classpath*:/applicationContext.xml
+            classpath*:/applicationContext-*.xml
             /WEB-INF/spring/applicationContext-*.xml
         </param-value>
     </context-param>
 
     <context-param>
             <param-name>webAppRootKey</param-name>
-            <param-value>m2-soap-rest</param-value>
+            <param-value>feedback-serv</param-value>
     </context-param>
 
     <listener>

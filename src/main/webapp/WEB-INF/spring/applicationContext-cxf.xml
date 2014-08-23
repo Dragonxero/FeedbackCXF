@@ -19,8 +19,9 @@ http://cxf.apache.org/schemas/jaxrs.xsd">
 	<!-- Found @ http://code.google.com/p/honghong9/source/browse/trunk/landa-counter/src/main/resources/spring/context-cxf.xml -->
 	<!-- import resource="classpath:META-INF/cxf/cxf-extension-jaxrs-binding.xml" 
 		/ -->
+    <!-- import resource="classpath:META-INF/cxf/cxf-extension-xml.xml" / -->
 
-	<context:component-scan base-package="com.rantandrave.rjoseph" />
+	<context:component-scan base-package="com.rjoseph.feedback" />
 
 	<jaxrs:server id="feedbackService" address="/feedback">
 		<jaxrs:serviceBeans>
@@ -46,10 +47,13 @@ http://cxf.apache.org/schemas/jaxrs.xsd">
 		<jaxrs:outInterceptors>
 			<ref bean="validationOutInterceptor" />
 		</jaxrs:outInterceptors>
+
+		<!-- For Spring Security (formerly Acegi) See http://svn.apache.org/repos/asf/cxf/trunk/distribution/src/main/release/samples/jax_rs/spring_security/src/main/webapp/WEB-INF/beans.xml 
+			& http://code.google.com/p/cxf-spring-security -->
 	</jaxrs:server>
 
 	<bean id="feedbackServiceBean"
-		class="com.rantandrave.rjoseph.service.impl.FeedbackRESTService" />
+		class="com.rjoseph.feedback.service.FeedbackRESTService" />
 
 	<!-- Bean Validation Spring bean definitions (see "jaxrs:server" node, above) -->
 	<bean id="exceptionMapper"
@@ -66,11 +70,4 @@ http://cxf.apache.org/schemas/jaxrs.xsd">
 		<property name="provider" ref="validationProvider" />
 	</bean>
 
-	<bean id="someString" class="java.lang.String">
-		<constructor-arg>
-		    <value>
-			This is Spring object injection ;-) !
-			</value>
-		</constructor-arg>
-	</bean>
 </beans>

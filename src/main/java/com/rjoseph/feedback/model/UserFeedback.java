@@ -1,4 +1,4 @@
-package com.rantandrave.rjoseph.model;
+package com.rjoseph.feedback.model;
 
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Range;
@@ -29,7 +29,11 @@ public class UserFeedback {
 		return id;
 	}
 
-    @NotEmpty
+    public void setId(int id) {
+		this.id = id;
+	}
+
+	@NotEmpty
 	public String getUsername() {
 		return username;
 	}

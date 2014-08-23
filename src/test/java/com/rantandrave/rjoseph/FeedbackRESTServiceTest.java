@@ -1,8 +1,5 @@
 package com.rantandrave.rjoseph;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.FixMethodOrder;
 import org.junit.runners.*;
 import org.junit.Test;
@@ -11,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
-import com.rantandrave.rjoseph.model.UserFeedback;
+import com.rjoseph.feedback.model.UserFeedback;
 
 import static org.junit.Assert.*;
 
@@ -30,7 +27,6 @@ import static org.hamcrest.Matchers.*;
 public class FeedbackRESTServiceTest {
 	
 	private Logger log = LoggerFactory.getLogger(FeedbackRESTServiceTest.class);
-	private List<Integer> feedbackIds = new ArrayList<>();	
 	
 	/*
 	static {

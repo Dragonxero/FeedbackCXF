@@ -1,4 +1,4 @@
-package com.rantandrave.rjoseph.model;
+package com.rjoseph.feedback.model;
 
 import javax.validation.constraints.DecimalMin;
 

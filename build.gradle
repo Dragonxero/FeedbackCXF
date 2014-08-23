@@ -5,9 +5,14 @@ apply plugin: 'jetty'
 apply plugin: 'war'
 
 /*
+//To execute a standard Java Application (static void main() method...)
 apply plugin: 'application'
-mainClassName="com.rantandrave.rjoseph.FeedbackRESTService"
+mainClassName="com.rjoseph.feedback.SomeMainApp"
 */
+
+
+// Change context path (base url), otherwise defaults to name of project 
+[jettyRunWar, jettyRun]*.contextPath = ''
 
 repositories {
     mavenCentral()
@@ -21,7 +26,7 @@ ext {
     // Artifacts for CXF dependency.
     cxfArtifacts = [
         'cxf-rt-frontend-jaxrs',
-        //'org.apache.cxf:cxf-rt-transports-http-jetty',
+        //'org.apache.cxf:cxf-rt-transports-http-jetty',  //For standalone CXF-Jetty (includes Jetty Server)
         'cxf-rt-rs-extension-providers',
         'cxf-rt-frontend-jaxws'
     ]
