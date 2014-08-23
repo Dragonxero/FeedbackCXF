@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/context 
+http://www.springframework.org/schema/context/spring-context.xsd
+http://cxf.apache.org/jaxrs
+http://cxf.apache.org/schemas/jaxrs.xsd">
+
+	<!-- do not use import statements if CXFServlet init parameters link to 
+		this beans.xml -->
+
+	<import resource="classpath:META-INF/cxf/cxf.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+
+	<!-- Found @ http://code.google.com/p/honghong9/source/browse/trunk/landa-counter/src/main/resources/spring/context-cxf.xml -->
+	<!-- import resource="classpath:META-INF/cxf/cxf-extension-jaxrs-binding.xml" 
+		/ -->
+
+	<context:component-scan base-package="com.rantandrave.rjoseph" />
+
+	<jaxrs:server id="feedbackService" address="/feedback">
+		<jaxrs:serviceBeans>
+			<ref bean="feedbackServiceBean" />
+		</jaxrs:serviceBeans>
+		<!-- See http://cxf.apache.org/docs/26-migration-guide.html for JSONProvider 
+			- jettison issues!!! -->
+		<!-- jaxrs:providers> <bean class="org.apache.cxf.jaxrs.provider.json.JSONProvider"> 
+			<property name="dropRootElement" value="true" /> <property name="supportUnwrapped" 
+			value="true" /> </bean> </jaxrs:providers -->
+		<!-- See http://cxf.apache.org/docs/jax-rs-data-bindings.html#JAX-RSDataBindings-Jackson 
+			for Jackson's JSONProvider -->
+		<jaxrs:providers>
+			<bean class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider" />
+			<!-- ref bean="exceptionMapper" / -->
+		</jaxrs:providers>
+
+		<!-- For Bean Validation - See @ http://cxf.apache.org/docs/validationfeature.html#ValidationFeature-ConfiguringBeanValidation1.1usingSpringbeandefinitionsXML -->
+		<jaxrs:inInterceptors>
+			<ref bean="validationInInterceptor" />
+		</jaxrs:inInterceptors>
+
+		<jaxrs:outInterceptors>
+			<ref bean="validationOutInterceptor" />
+		</jaxrs:outInterceptors>
+	</jaxrs:server>
+
+	<bean id="feedbackServiceBean"
+		class="com.rantandrave.rjoseph.service.impl.FeedbackRESTService" />
+
+	<!-- Bean Validation Spring bean definitions (see "jaxrs:server" node, above) -->
+	<bean id="exceptionMapper"
+		class="org.apache.cxf.jaxrs.validation.ValidationExceptionMapper" />
+	<bean id="validationProvider" class="org.apache.cxf.validation.BeanValidationProvider" />
+
+	<bean id="validationInInterceptor"
+		class="org.apache.cxf.jaxrs.validation.JAXRSBeanValidationInInterceptor">
+		<property name="provider" ref="validationProvider" />
+	</bean>
+
+	<bean id="validationOutInterceptor"
+		class="org.apache.cxf.jaxrs.validation.JAXRSBeanValidationOutInterceptor">
+		<property name="provider" ref="validationProvider" />
+	</bean>
+
+	<bean id="someString" class="java.lang.String">
+		<constructor-arg>
+		    <value>
+			This is Spring object injection ;-) !
+			</value>
+		</constructor-arg>
+	</bean>
+</beans>

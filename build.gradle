@@ -1,0 +1,125 @@
+apply plugin: 'java'
+apply plugin: 'eclipse-wtp'
+apply plugin: 'idea'
+apply plugin: 'jetty'
+apply plugin: 'war'
+
+/*
+apply plugin: 'application'
+mainClassName="com.rantandrave.rjoseph.FeedbackRESTService"
+*/
+
+repositories {
+    mavenCentral()
+}
+
+//Build-script-wide variables
+ext {
+    // CXF version.
+    cxfVersion = '3.0.1'
+
+    // Artifacts for CXF dependency.
+    cxfArtifacts = [
+        'cxf-rt-frontend-jaxrs',
+        //'org.apache.cxf:cxf-rt-transports-http-jetty',
+        'cxf-rt-rs-extension-providers',
+        'cxf-rt-frontend-jaxws'
+    ]
+}
+
+dependencies {    
+    compile 'com.j256.ormlite:ormlite-core:4.48'
+    compile 'com.j256.ormlite:ormlite-jdbc:4.48'
+    compile 'com.h2database:h2:1.4.180'
+    
+    //Spring 4.x and CDI JSR-330 (for @Inject etc.)
+    compile 'org.springframework:spring-web:4.0.5.RELEASE'
+    compile 'javax.inject:javax.inject:1'
+    
+    //Jackson JAX-RS JSON
+    compile 'com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:2.4.2'
+
+    // Assign CXF dependencies to configuration.
+    cxfArtifacts.each { artifact ->
+        compile "org.apache.cxf:$artifact:$cxfVersion"
+    }
+    
+    //JAX-RS Bean validation
+    compile 'javax.validation:validation-api:1.1.0.Final'
+    compile 'javax.el:javax.el-api:3.0.0'
+    //compile 'org.glassfish:javax.el:3.0.0'
+    compile 'org.hibernate:hibernate-validator:5.0.2.Final'
+    
+    //Servlet API (provided at runtime)
+    providedCompile 'javax.servlet:servlet-api:2.5'
+    
+    compile 'org.slf4j:slf4j-api:1.7.7'
+    compile 'org.slf4j:slf4j-log4j12:1.7.7'
+    //compile 'org.slf4j:slf4j-simple:1.7.7'
+    compile 'log4j:log4j:1.2.17'
+
+    testCompile 'junit:junit:4.11'
+    testCompile 'org.codehaus.groovy:groovy-all:2.3.2'
+    
+    
+    testCompile (group: 'com.jayway.restassured', name: 'rest-assured', version:'2.3.2') {
+        exclude(module: 'groovy')
+    }
+}
+
+//Add Jetty war-start-stop phases to the 'test' task
+test.doFirst {
+    jettyRun.contextPath = '/';
+    jettyRun.httpPort = 8080    // Port for test
+    jettyRun.daemon = true
+    jettyRun.execute()
+    println "***STARTING JETTY***"
+    }
+test.doLast {
+    jettyStop.stopPort = 8079   // Port for stop signal
+    jettyStop.stopKey = 'stopKey'
+    jettyStop.execute()
+    println "***STOPPING JETTY***"
+}
+
+sourceCompatibility=1.7
+targetCompatibility=1.7
+
+//From the Eclipse plugin - manipulates the project file and classpath etc.
+eclipse {
+	project {
+		comment = ""
+
+		buildCommand "org.eclipse.jdt.core.javabuilder"
+
+		natures "com.springsource.sts.grails.core.nature",
+			//"org.eclipse.jdt.groovy.core.groovyNature",
+			"org.eclipse.jdt.core.javanature",
+	        	"com.springsource.sts.gradle.core.nature"
+	}
+
+	classpath {
+        	containers "com.springsource.sts.gradle.classpathcontainer"
+	}
+}
+
+//From the idea plugin - manipulates the project file's XML etc.
+idea {
+	project {
+        	jdkName = targetCompatibility
+
+		ipr {
+        		withXml { provider ->
+            		def node = provider.asNode()
+            		
+            		// Use GIT
+        		def vcsConfig = node.component.find { it.'@name' == 'VcsDirectoryMappings' }
+        		vcsConfig.mapping[0].'@vcs' = 'Git'
+			
+            		// Set Gradle home
+            		def gradleSettings = node.appendNode('component', [name: 'GradleSettings'])
+            		gradleSettings.appendNode('option', [name: 'SDK_HOME', value: gradle.gradleHomeDir])
+        		}
+		}
+	}
+}

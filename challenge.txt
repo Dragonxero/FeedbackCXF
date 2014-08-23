@@ -1,0 +1,14 @@
+Software Engineer – Presentation and Code Review
+
+You are required to implement a small ‘code challenge’ and present your solution for review in a face to face presentation. This challenge is designed to take no more than five hours.
+Consider the following question:
+
+You have been commissioned to create a middleware solution which integrates a customer feedback questionnaire with a customer feedback management system. The questionnaire needs to send feedback into the system via an API. You need to design a URI scheme and data structure for this API and describe your design choices and why you have chosen them. The data captured from a customer includes their name, a score of 1-10, indicating how happy the customer is with the service and a free text comment: all three of these fields are mandatory.
+The challenge is to also implement this API in Java and present it working, on your own laptop during a code review. An emphasis on the presentation will be on how you have tested your solution using Agile testing techniques.
+You should be prepared to make your solution/code available to Rant & Rave following your presentation for further review.
+
+Further consideration, in the presentation needs to be how you as a SCRUM Master would break this challenge down in a Sprint backlog for implementation by a SCRUM team.
+A large display monitor, a wireless network connection and a flip chart will be made available for your presentation.
+
+￼￼Rant & Rave
+www.rantandrave.com • hello@rantandrave.com • +44 (0)2476 011 911
