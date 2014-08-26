@@ -1,4 +1,4 @@
-package com.rantandrave.rjoseph;
+package com.rjoseph.feedback.service;
 
 import org.junit.FixMethodOrder;
 import org.junit.runners.*;
